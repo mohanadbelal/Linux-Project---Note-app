@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{% if note %}Edit Note{% else %}New Note{% endif %} – NoteVault{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h2>{% if note %}Edit Note{% else %}Create a New Note{% endif %}</h2>
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input
+          class="form-control"
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Give your note a title…"
+          value="{{ note.title if note else '' }}"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input
+          class="form-control"
+          type="text"
+          id="category"
+          name="category"
+          placeholder="e.g. Work, Personal, Ideas"
+          value="{{ note.category if note else 'General' }}"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="content">Content</label>
+        <textarea
+          class="form-control"
+          id="content"
+          name="content"
+          placeholder="Write your note here…"
+          required
+        >{{ note.content if note else '' }}</textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">
+          {% if note %}💾 Save Changes{% else %}✚ Create Note{% endif %}
+        </button>
+        <a href="{{ url_for('index') }}" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}NoteVault – Your Notes{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Search & Filter -->
+  <form class="search-bar" method="GET" action="{{ url_for('index') }}">
+    <input
+      class="search-input"
+      type="text"
+      name="q"
+      placeholder="Search notes…"
+      value="{{ search }}"
+      id="search-input"
+    />
+    <button class="btn btn-ghost btn-sm" type="submit">Search</button>
+    {% if search or active_category %}
+    <a href="{{ url_for('index') }}" class="btn btn-ghost btn-sm">Clear</a>
+    {% endif %}
+  </form>
+
+  {% if categories %}
+  <div class="category-pills" style="margin-bottom: 1.5rem;">
+    <a href="{{ url_for('index', q=search) }}" class="pill {% if not active_category %}active{% endif %}">All</a>
+    {% for cat in categories %}
+    <a href="{{ url_for('index', category=cat, q=search) }}" class="pill {% if active_category == cat %}active{% endif %}">{{ cat }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Notes Grid -->
+  {% if notes %}
+  <div class="notes-grid">
+    {% for note in notes %}
+    <div class="note-card {% if note.is_pinned %}pinned{% endif %}" style="animation-delay: {{ loop.index0 * 0.06 }}s">
+      <div class="note-header">
+        <div class="note-title">{{ note.title }}</div>
+        {% if note.is_pinned %}
+        <span class="pin-badge">📌 Pinned</span>
+        {% endif %}
+      </div>
+      <span class="note-category">{{ note.category }}</span>
+      <div class="note-content">{{ note.content }}</div>
+      <div class="note-footer">
+        <span class="note-date">{{ note.updated_at.strftime('%b %d, %Y') }}</span>
+        <div class="note-actions">
+          <form action="{{ url_for('toggle_pin', note_id=note.id) }}" method="POST" style="display:inline">
+            <button class="btn btn-ghost btn-sm btn-icon" type="submit" title="Toggle Pin">
+              {% if note.is_pinned %}📌{% else %}📍{% endif %}
+            </button>
+          </form>
+          <a href="{{ url_for('edit_note', note_id=note.id) }}" class="btn btn-ghost btn-sm btn-icon" title="Edit">✏️</a>
+          <form action="{{ url_for('delete_note', note_id=note.id) }}" method="POST" style="display:inline" onsubmit="return confirm('Delete this note?')">
+            <button class="btn btn-danger btn-sm btn-icon" type="submit" title="Delete">🗑️</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <!-- Empty State -->
+  <div class="empty-state">
+    <div class="empty-state-icon">📝</div>
+    <h3>No notes yet</h3>
+    <p>Create your first note to get started.</p>
+    <a href="{{ url_for('create_note') }}" class="btn btn-primary">✚ New Note</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
