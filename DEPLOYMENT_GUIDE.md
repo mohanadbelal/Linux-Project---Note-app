@@ -112,7 +112,7 @@ scp -i your-key.pem -r "Linux Project - Note app/" ec2-user@<YOUR_EC2_PUBLIC_IP>
 
 ```bash
 # On the EC2 instance
-git clone <your-repo-url> ~/note-taking-app
+git clone https://github.com/mohanadbelal/Linux-Project---Note-app ~/note-taking-app
 ```
 
 ### Install Python dependencies
@@ -207,7 +207,13 @@ sudo systemctl enable notevault
 sudo systemctl status notevault
 ```
 
-> **Note:** Replace `ec2-user` with `ubuntu` in the service file if you're on Ubuntu.
+> **Note:** Replace `ec2-user` with `ubuntu` in the service file if you're on Ubuntu. The `User`/`Group` and all paths must match the user that owns the app files.
+
+> **⚠️ RHEL/SELinux:** If the service fails with `status=203/EXEC`, SELinux is blocking Gunicorn. Fix it with:
+> ```bash
+> sudo chcon -R -t bin_t /home/ec2-user/note-taking-app/venv/bin/
+> sudo systemctl restart notevault
+> ```
 
 ---
 
@@ -296,7 +302,7 @@ crontab -e
 Add this line to run the backup every day at 2:00 AM:
 
 ```cron
-0 2 * * * /home/ec2-user/backup_mariadb.sh >> /mnt/backup/mariadb/backup.log 2>&1
+* * * * * /home/ec2-user/backup_mariadb.sh >> /mnt/backup/mariadb/backup.log 2>&1
 ```
 
 ### 10d. Restore from a backup (if needed)
