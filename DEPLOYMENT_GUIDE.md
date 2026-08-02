@@ -8,7 +8,7 @@ Complete step-by-step guide to deploy the note-taking app on your EC2 instance w
 
 | Item | Details |
 |---|---|
-| EC2 Instance | Amazon Linux 2023 or Ubuntu 22.04+ |
+| EC2 Instance | Amazon Linux 2023, Ubuntu 22.04+, or RHEL 8/9 |
 | Security Group | Inbound rules: **SSH (22)**, **HTTP (80)**, **App (5000)** |
 | Additional EBS Volume | Attached to the instance (for backups) |
 
@@ -20,7 +20,7 @@ Complete step-by-step guide to deploy the note-taking app on your EC2 instance w
 ssh -i your-key.pem ec2-user@<YOUR_EC2_PUBLIC_IP>
 ```
 
-> **Note:** Use `ubuntu` instead of `ec2-user` if you're running Ubuntu.
+> **Note:** Use `ubuntu` instead of `ec2-user` if you're running Ubuntu. On RHEL, the default user is also `ec2-user`.
 
 ---
 
@@ -32,6 +32,19 @@ ssh -i your-key.pem ec2-user@<YOUR_EC2_PUBLIC_IP>
 sudo dnf update -y
 sudo dnf install -y python3 python3-pip mariadb105-server git
 ```
+
+### RHEL 8 / 9 (Red Hat Enterprise Linux)
+
+```bash
+sudo dnf update -y
+sudo dnf install -y python3 python3-pip mariadb-server git
+```
+
+> **Note (RHEL 8 only):** If `mariadb-server` is not found, enable the AppStream module first:
+> ```bash
+> sudo dnf module enable mariadb:10.5 -y
+> sudo dnf install -y mariadb-server
+> ```
 
 ### Ubuntu 22.04+
 
