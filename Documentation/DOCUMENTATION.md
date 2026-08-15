@@ -81,10 +81,6 @@ Linux Project - Note app/
 
 ---
 
-### Figure 3: Category Filtering & Live Search
-![Search & Category Filtering](./screenshots/03_pinned_filter.png)
-*Figure 3: Filtering notes dynamically by category tags ("Work", "Personal", "Ideas") and keywords.*
-
 ---
 
 ### Figure 4: MariaDB Database Connection & Schema Verification
